@@ -5,41 +5,65 @@
 ---
 
 local setmetatable = setmetatable
---local os = os
+local os = os
 local textbox = require("wibox.widget.textbox")
---local gears = require("gears")
---local wibox = require("wibox")
+local gears = require("gears")
+local wibox = require("wibox")
 local gtable = require("gears.table")
 local lain = require('lain')
 local markup = lain.util.markup
 local beautiful = require("beautiful")
 local seperator = { mt = {} }
 
-function seperator.gen_markup(left, current_color, next_color, fg)
+
+
+local function new(left,current_color,next_color,fg)
+    local w = wibox.layout.fixed.horizontal()
+    gtable.crush(w, seperator, true)
+    local arrow = {}
+    local thin = {}
+    local character_soft = "\u{E0B1}"
+    local character_hard = "\u{E0B0}"
     local curr_bg = current_color or beautiful.bg_normal
     local next_bg = next_color or beautiful.bg_normal
+    --local divider_fg = fg or beautiful.fg_powerline or beautiful.fg_normal
     local base_fg = fg or beautiful.fg_normal
     if left then
-        if curr_bg == next_bg then
-            return markup.fontcolor(beautiful.powerline_font, base_fg, curr_bg, beautiful.powerline_left_soft or "\u{E0B1}")
-        end
-        return markup.fontcolor(beautiful.powerline_font, curr_bg, next_bg, beautiful.powerline_left_hard or "\u{E0B0}")
-    end
-    if curr_bg == next_bg then
-        return markup.fontcolor(beautiful.powerline_font, next_bg, curr_bg, beautiful.powerline_right_soft or "\u{E0B2}")
-    end
-    return markup.fontcolor(beautiful.powerline_font, base_fg, curr_bg, beautiful.powerline_right_hard or "\u{E0B3}")
-end
+        arrow = lain.util.separators.arrow_right(current_color,next_color)
+        thin = wibox.widget{
+            widget = wibox.widget.separator,
+            shape = gears.shape.powerline,
+            forced_width=18,
+            color = fg,
+        }
+    else
+        arrow = lain.util.separators.arrow_left(next_color,current_color)
+        thin = wibox.widget{
+            widget = wibox.widget.separator,
+            forced_width=18,
+            shape = function(cr,width,height)
+                gears.shape.transform(gears.shape.powerline):translate(width,beautiful.wibar_height):rotate(math.pi)(cr,width,height)
+            end,
+            color = fg,
+        }
 
-local function new(left, current_color, next_color, fg)
-    local w = textbox()
-    gtable.crush(w, seperator, true)
-    w:set_markup(seperator.gen_markup(left,current_color,next_color,fg))
+        --thin.shape = gears.shape.transform(gears.shape.powerline):translate(10,beautiful.wibar_height):rotate(math.pi)
+        --curr_bg = next_color or beautiful.bg_normal
+        --next_bg = current_color or beautiful.bg_normal
+    end
+
+    if curr_bg == next_bg then
+        w:add(wibox.container.background(thin,curr_bg))
+    else
+        w:add(wibox.container.background(arrow,curr_bg))
+    end
+
     return w
 end
 function seperator.mt:__call(...)
     return new(...)
 end
+
 
 return setmetatable(seperator, seperator.mt)
 
