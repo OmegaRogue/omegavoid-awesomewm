@@ -5,6 +5,7 @@
 ---
 
 local rawget     = rawget
+local unpack = unpack or table.unpack -- lua 5.1 retro-compatibility
 
 local helpers = {}
 
@@ -32,6 +33,8 @@ local function roundNumber(num, digits)
     local fmt = "%." .. digits .. "f"
     return tonumber(fmt:format(num))
 end
+
+
 
 local function filesize(size, options)
 
