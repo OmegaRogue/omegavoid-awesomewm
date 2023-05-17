@@ -4,6 +4,10 @@
 --- DateTime: 14.02.22 10:17
 ---
 
+awesome.register_xproperty("_GTK_UNIQUE_BUS_NAME", "string")
+awesome.register_xproperty("_GTK_MENUBAR_OBJECT_PATH", "string")
+
 return {
-    widget = require("omegavoid.widget")
+    widget = require("omegavoid.widget"),
+	global_menu = require("omegavoid.global-menu")
 }
