@@ -30,12 +30,19 @@ local awestore = require("awestore")
 
 -- [{bg,fg,content={}}]
 
+
+local powerline_line = {}
+
+
+
+
 local function factory(args)
     args = args or {}
     local line = {
         layout = args.layout or fixed.horizontal(),
         is_left = args.is_left or false,
         line_layout = {},
+		bg_default = args.bg or beautiful.bg_normal,
     }
     for i, v in ipairs(args.line_layout) do
         line.line_layout[i] = {
@@ -76,12 +83,12 @@ local function factory(args)
     for i, v in ipairs(line.line_layout) do
         if line.is_left then
             if i == #line.line_layout then
-                line[i*2] = seperator{is_left=true,curr_bg=v.bg:get(),next_bg=nil,fg=v.fg:get()}
+                line[i*2] = seperator{is_left=true,curr_bg=v.bg:get(),next_bg=line.bg_default,fg=v.fg:get()}
                 v.bg:subscribe(function(bg)
-                    line[i*2] = seperator{is_left=true,curr_bg=bg,next_bg=nil,fg=v.fg:get()}
+                    line[i*2] = seperator{is_left=true,curr_bg=bg,next_bg=line.bg_default,fg=v.fg:get()}
                 end)
                 v.fg:subscribe(function(fg)
-                    line[i*2] = seperator{is_left=true,curr_bg=v.bg:get(),next_bg=nil,fg=fg}
+                    line[i*2] = seperator{is_left=true,curr_bg=v.bg:get(),next_bg=line.bg_default,fg=fg}
                 end)
             else
                 line[i*2] = seperator{is_left=true,curr_bg=v.bg:get(),next_bg=line.line_layout[i+1].bg:get(),fg=v.fg:get()}
@@ -97,12 +104,12 @@ local function factory(args)
             end
         else
             if i == 1 then
-                line[1] = seperator{curr_bg=v.bg:get(),next_bg=nil,fg=v.fg:get()}
+                line[1] = seperator{curr_bg=v.bg:get(),next_bg=line.bg_default,fg=v.fg:get()}
                 v.bg:subscribe(function(bg)
-                    line[1] = seperator{curr_bg=bg,next_bg=nil,fg=v.fg:get()}
+                    line[1] = seperator{curr_bg=bg,next_bg=line.bg_default,fg=v.fg:get()}
                 end)
                 v.fg:subscribe(function(fg)
-                    line[1] = seperator{curr_bg=v.bg:get(),next_bg=nil,fg=fg}
+                    line[1] = seperator{curr_bg=v.bg:get(),next_bg=line.bg_default,fg=fg}
                 end)
             else
                 line[i*2-1] = seperator{curr_bg=v.bg:get(),next_bg=line.line_layout[i-1].bg:get(),fg=v.fg:get()}

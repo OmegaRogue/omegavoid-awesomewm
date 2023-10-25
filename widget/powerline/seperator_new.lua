@@ -10,6 +10,7 @@ local wibox = require("wibox")
 local lain = require('lain')
 local beautiful = require("beautiful")
 local naughty = require("naughty")
+local dpi = beautiful.xresources.apply_dpi
 
 local function factory(args)
     args = args or {}
@@ -28,14 +29,14 @@ local function factory(args)
         thin = wibox.widget {
             widget = wibox.widget.separator,
             shape = gears.shape.powerline,
-            forced_width = 18,
+            forced_width = dpi(18),
             color = seperator.fg,
         }
     else
         arrow = lain.util.separators.arrow_left(seperator.next_bg, seperator.curr_bg)
         thin = wibox.widget {
             widget = wibox.widget.separator,
-            forced_width = 18,
+            forced_width = dpi(18),
             shape = function(cr, width, height)
                 gears.shape.transform(gears.shape.powerline):translate(width, beautiful.wibar_height):rotate(math.pi)(cr, width, height)
             end,

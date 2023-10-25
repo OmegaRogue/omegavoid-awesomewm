@@ -14,7 +14,7 @@ local markup = lain.util.markup
 local beautiful = require("beautiful")
 local wibox = require('wibox')
 local segment = { mt = {} }
-
+local dpi = beautiful.xresources.apply_dpi
 
 
 local function new(left,current_color,next_color,fg,...)
